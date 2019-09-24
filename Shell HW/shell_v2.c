@@ -8,17 +8,20 @@
 #define BUFFER_SIZE 32
 #define MAX_CMD 10
 
-//TODO: put everything in while
+//TODO: clear argv array
 //TODO: implement background process
 
 int main(){
+  
+  
   char argBuf[BUFFER_SIZE];
-  char* argv[10]; //user arg
-  int argc; //arg count
-  int i = 0;
   printf(">");
     
-  while((fgets(argBuf, BUFFER_SIZE, stdin)) && *argBuf != "\n"){
+  while((fgets(argBuf, BUFFER_SIZE, stdin)) && *argBuf != '\n'){
+    int argc; //arg count
+    int i = 0;
+    
+    char* argv[10]; //user arg
     if(strcmp(argBuf, "exit\n") == 0) exit(0);
     char *token;
     token = strtok(argBuf, " ");
@@ -53,6 +56,7 @@ int main(){
       //free(argv);
       printf(">");
     }
+   
   }
 }
 
