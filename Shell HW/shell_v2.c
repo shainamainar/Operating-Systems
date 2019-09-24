@@ -8,7 +8,6 @@
 #define BUFFER_SIZE 32
 #define MAX_CMD 10
 
-//TODO: clear argv array
 //TODO: implement background process
 
 int main(){
@@ -30,10 +29,10 @@ int main(){
       argv[i] = token;
       token = strtok(NULL, " ");
       i++;
-      if (argBuf[strlen(argBuf)-1] == '\n')
-      argBuf[strlen(argBuf)-1] = '\0';
     } 
-    argv[i] = NULL;
+    if (argBuf[strlen(argBuf)-1] == '\n')
+    argBuf[strlen(argBuf)-1] = '\0';
+   
     argc = i;
     for(i = 0; i < argc; i++){
       printf("arg[%d] is ", i);
