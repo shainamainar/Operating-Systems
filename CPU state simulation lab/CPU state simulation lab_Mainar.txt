@@ -1,0 +1,91 @@
+Download the process-run.py Python source code file.
+This Python 2.7 code simulates a basic CPU scheduler with
+options to change the processes and their CPU vs IO activities
+and policies that determine when processes get to run or resume running.
+
+To run the program you must use Python 2.7.  It will not run on Python 3.x.
+If Python 2.7 is in your path simply type...
+python process-run.py -h
+
+Otherwise, you can prefix the python command with the
+path in which Python is installed.  Example:
+C:\Users\Public\python\Python27\python process-run.py -h
+
+# -c flag shows table of turn-by-turn CPU usage and process state
+# 5:100 means first process has 5 instructions to complete
+#                               100% of instructions are CPU (0% IO)
+python process-run.py -l 5:100 -c
+
+Q1. At what time did process 0 complete? 5
+
+# Repeat the same, but make the process do more IO.
+# Default IO operation takes 5 seconds
+python process-run.py -l 5:50 -c
+
+
+Q2. At what time did process 0 complete? 18
+
+# Try running two processes. 
+# Use a comma to separate the pair of numbers for each process.
+# Try these three simulation runs.
+python process-run.py -l 5:100,5:100 -c
+
+python process-run.py -l 5:100,5:50 -c
+
+python process-run.py -l 5:50,5:100 -c
+
+Q3. Describe the simulation's CPU scheduling policy. uses a queue for the processes and each process goes to completion  
+a) Under what two circumstances does the CPU switch from
+   running one process to running a second process? when the first process is done or once a process is running IO then it is kicked or blocked to the waiting list 
+b) How is a CPU-bound (process for which 100% of its instructions run on the CPU, no IO) treated? it runs to completion, doesn't get blocked
+
+Q4. Which of these two simulation runs will have both processes
+    complete in the least total amount of time? run B
+    
+# run (a)
+# What is the total run time to complete both processes? 10
+python process-run.py -l 4:100,1:0
+
+# run (b)
+# What is the total run time to complete both processes? 6
+python process-run.py -l 1:0,4:100
+
+Q5. Your observation from Q4 should be a justification for
+
+what CPU scheduling decision? IO should take priority over CPU bound processes because while it is waiting, the CPU process can run, making the program more effecient 
+
+Suppose an operating system designer were to implement a
+CPU scheduling policy that allowed a process that did IO
+to hold the CPU while it waited for its IO to complete.
+# Use the -S flag to change the switching policy.
+
+# run (a)
+# What is the total time to complete both processes? 9
+python process-run.py -l 1:0,4:100 -c -S SWITCH_ON_END
+
+# run (b)
+# What is the total time to complete both processes? 6
+python process-run.py -l 1:0,4:100 -c -S SWITCH_ON_IO
+
+
+# -I IO_RUN_LATER means that when a process does IO it will be
+# put back into a ready queue behind other ready processes to run later.
+# Here we have the first process on the CPU needing to complete
+# 3 instructions, but does an IO op on its first instruction.
+# Next, three CPU-bound processes enter system.
+# Run this simulation to see what happens.  
+Q6. What is the total time to complete all processes? 27
+
+python process-run.py -l 3:0,5:100,5:100,5:100 -S SWITCH_ON_IO -I IO_RUN_LATER -c
+
+
+# An alternative CPU scheduling policy gives priority to the
+# process whose IO completes letting it run immediately upon
+# completion of its IO operation.
+python process-run.py -l 3:0,5:100,5:100,5:100 -S SWITCH_ON_IO -I IO_RUN_IMMEDIATE -c
+
+Q7. What is the total time to complete all processes? 18
+
+Q8. Why might it be a good idea to implement allowing a process
+that was blocked for IO to immediately get back to running on
+the CPU when its IO operation completes? because process that was blocked for IO will have to wait for all the processes after it to complete before it completes itself. it would take longer for it to be in wating and it would not be effecient 
