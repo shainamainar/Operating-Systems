@@ -4,25 +4,24 @@
 #include<stdlib.h> 
 #include<unistd.h>
 #include <stdbool.h>
+#include<sys/wait.h>
+#include<sys/types.h>
 
 #define BUFFER_SIZE 32
 #define MAX_CMD 10
 
-//TODO: implement background process
-//TODO: make sure multiword commands work
+//TODO: copy output to file
 
 int main(){
-  
-  
   char argBuf[BUFFER_SIZE];
   printf(">");
+  bool back = false;
     
   while((fgets(argBuf, BUFFER_SIZE, stdin)) && *argBuf != '\n'){
-    int argc; //arg count
+    argBuf[strcspn(argBuf, "\n")] = 0;
     int i = 0;
-    
     char* argv[10]; //user arg
-    if(strcmp(argBuf, "exit\n") == 0) exit(0);
+    if(strcmp(argBuf, "exit") == 0) exit(0);
     char *token;
     token = strtok(argBuf, " ");
     while(token != NULL){
@@ -33,12 +32,12 @@ int main(){
     } 
     if (argBuf[strlen(argBuf)-1] == '\n')
     argBuf[strlen(argBuf)-1] = '\0';
-   
-    argc = i;
-    for(i = 0; i < argc; i++){
-      printf("arg[%d] is ", i);
-      printf("%s\n", argv[i]);
+
+    if(strcmp(argv[i-1], "&") == 0){
+      argv[--i] = NULL;
+      back = true;
     }
+      
     printf("PID is: %d\n", getpid());
     pid_t pid = fork();
     int status;
@@ -53,10 +52,11 @@ int main(){
     }
     else{
       while(wait(&status) != pid);
+      if(!(back)) wait(&status);
+      
       //free(argv);
       printf(">");
     }
-   
   }
 }
 
