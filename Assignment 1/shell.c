@@ -25,7 +25,7 @@ int main(){
     char *token;
     token = strtok(argBuf, " ");
     while(token != NULL){
-       // printf("%s\n", token);
+      //printf("%s\n", token);
       argv[i] = token;
       token = strtok(NULL, " ");
       i++;
@@ -48,12 +48,12 @@ int main(){
     else if(pid == 0){
       execvp(argv[0], argv);
       perror("execvp fail\n");
-      exit(1);
+      exit(0);
     }
     else{
       while(wait(&status) != pid);
       if(!(back)) wait(&status);
-      
+      memset(argv, 0, BUFFER_SIZE);
       //free(argv);
       printf(">");
     }
