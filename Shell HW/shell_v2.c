@@ -9,6 +9,7 @@
 #define MAX_CMD 10
 
 //TODO: implement background process
+//TODO: make sure multiword commands work
 
 int main(){
   
