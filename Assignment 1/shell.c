@@ -1,7 +1,3 @@
-//
-//  shell.c
-//  Shaina Mae Mainar
-//
 //imported libraries
 #include<stdio.h> 
 #include<string.h> 
@@ -14,59 +10,53 @@
 #define BUFFER_SIZE 32
 #define MAX_CMD 10
 
+//TODO: copy output to file
 
 int main(){
-  char argBuf[BUFFER_SIZE]; // initial input
+  char argBuf[BUFFER_SIZE];
   printf(">");
-  bool back = false;
+  
     
   while((fgets(argBuf, BUFFER_SIZE, stdin)) && *argBuf != '\n'){
-    // remove new line character
-    argBuf[strcspn(argBuf, "\n")] = 0;
+    bool back = false;
     int i = 0;
-    char* argv[10]; //user arg
-    if(strcmp(argBuf, "exit") == 0) exit(0);
-    char *token; //individual tokens
-    token = strtok(argBuf, " ");
-	//add tokens to arguments array
+    char* argv[MAX_CMD]; //user arg
+    char *token;
+    token = strtok(argBuf, " \n");
     while(token != NULL){
       argv[i] = token;
-      token = strtok(NULL, " ");
+      //printf("%s\n", argv[i]);
+      token = strtok(NULL, " \n");
       i++;
     } 
-	//removing new line characters so execvp doesnt break
-    if (argBuf[strlen(argBuf)-1] == '\n')
-    argBuf[strlen(argBuf)-1] = '\0';
-	//background process
+    argv[i] = NULL;
+    //printf("%s\n", argv[i-1]);
     if(strcmp(argv[i-1], "&") == 0){
       argv[--i] = NULL;
       back = true;
     }
-    //fork child
-    printf("PID is: %d\n", getpid());
+    if(strcmp(argv[i-1], "exit") == 0) exit(1);
+    
     pid_t pid = fork();
+    //printf("PID is: %d\n", getpid());
     int status;
-	//fork method fails
     if(pid < 0){
       printf("fork fail\n");
       exit(1);
     }
-	//child executes
     else if(pid == 0){
       execvp(argv[0], argv);
       perror("execvp fail\n");
-      exit(0);
+      exit(1);
     }
-	//parent waits for child
     else{
-      while(wait(&status) != pid);
-	  //dont wait for background process
-      if(!(back)) wait(&status);
-	  //remove date from arguments array before taking in new input
+      if(back == false) wait(&pid);
+      printf(">");
       memset(argv, 0, BUFFER_SIZE);
       //free(argv);
-      printf(">");
+      
     }
+   
   }
 }
 
