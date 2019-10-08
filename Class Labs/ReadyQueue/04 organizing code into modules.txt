@@ -1,0 +1,43 @@
+Group related code into modules, each comprised of a .h and .c file.
+ 
+
+------ Contents of file swap.h ------
+// This compiler macro means to only process the following
+// code if the given symbol has not be defined.
+// This avoids errors due to C flagging duplicate declarations.
+#if !defined(SWAP_HDR)
+#define SWAP_HDR
+
+// a - pointer to first integer value
+// b - pointer to second integer value
+// post-condition: values in memory locations specifed by pointers
+// will be swapped.
+void swap(int* a, int* b);
+
+#endif
+
+------ contents of swap.c ------
+
+#include "swap.h"
+
+void swap(int* a, int* b)
+{
+  int temp = *a; 
+  *a = *b;
+  *b = temp;
+}
+
+------- contents of swap_demo.c -------
+
+#include "swap.h"
+void main()
+{
+  int x = 100;
+  int y = 200;
+  printf("Before swap x %d y %d\n", x, y);
+
+  // Use the & operator to get the address of a variable.
+  // In C, the programmer must explicitly indicate that pass by reference is desired.
+  swap(&x, &y);
+  printf("After swap x %d y %d\n", x, y);
+}

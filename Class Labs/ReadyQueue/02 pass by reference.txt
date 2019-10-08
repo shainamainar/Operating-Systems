@@ -1,0 +1,30 @@
+// Correct way to do swap using pass-by-reference
+
+#include <stdio.h>
+
+// function gets addresses of actual arguments x, y from the function call stack
+// Arguments are type int* which means a pointer to an integer value.
+void swap(int* a, int* b)
+{
+  int temp = *a; // The * before a pointer variable means to
+                 // de-reference the pointer to get the value
+                 // stored in the address indicated by the pointer.
+  *a = *b;
+  *b = temp;
+
+  // when swap exits, all stack arguments and local variables
+  // a, b, and temp cease to exist.
+  // This time 
+}
+
+void main()
+{
+  int x = 100;
+  int y = 200;
+  printf("Before swap x %d y %d\n", x, y);
+
+  // Use the & operator to get the address of a variable.
+  // In C, the programmer must explicitly indicate that pass by reference is desired.
+  swap(&x, &y);
+  printf("After swap x %d y %d\n", x, y);
+}

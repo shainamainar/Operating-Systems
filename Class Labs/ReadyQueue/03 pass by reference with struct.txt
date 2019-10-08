@@ -1,0 +1,42 @@
+// example of passing a struct by reference
+
+#include <stdio.h>
+
+typedef struct {
+  int pid;
+  int totalTime;
+  int remainingTime;
+} PCB;
+
+// Decrease process remaining time by given time value.
+// function gets addresses of actual argument process from the function call stack
+// Arguments are type PCB* which means a pointer to a PCB struct.
+void runProcess(PCB* process, int time)
+{
+  // Decrease process remaining time by given time value.
+
+  // Since the DOT has higher precedence, we must use ()s
+  // to force C to de-reference the pointer to get the struct,
+  // then use the DOT to access the element
+  (*process).remainingTime = (*process).remainingTime - time;
+
+  -- OR --
+  // The -> operator is the preferred way to dereference a struct value.
+  process->remainingTime = process->remainingTime - time;
+
+  // Since we used pass by address, the actual PCB in main
+  // is changed.
+}
+
+void main()
+{
+  PCB p1;
+  p1.pid = 1;
+  p1.totalTime = 10;
+  p1.remainingTime = p1.totalTime;
+
+  // & means to pass address of p1
+  processRun(&p1, 3);
+  // We expect to see P1 time left is 7
+  printf("P1 time left is %d\n", p1.remainingTime);
+}

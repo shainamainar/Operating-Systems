@@ -1,0 +1,28 @@
+// What happens if we try to write a swap function using pass by value
+
+#include <stdio.h>
+
+// function gets copy of values 100, 200 from the function call stack
+// formal arguments - parameters a, b are assigned using copies of values 100, 200
+void swap(int a, int b)
+{
+  int temp = a;
+  a = b;
+  b = temp;
+  // at this point a and b have swapped their values but...
+
+  // when swap exits, all stack arguments and local variables
+  // a, b, and temp cease to exist.
+  // Any changes made to pass-by-value arguments will be lost.
+}
+
+void main()
+{
+  int x = 100;
+  int y = 200;
+  printf("Before swap x %d y %d\n", x, y);
+  // pass-by-value means that a copy of the value 100 and 200
+  // are pushed onto the function call stack.
+  swap(x, y);
+  printf("After swap x %d y %d\n", x, y);
+}
