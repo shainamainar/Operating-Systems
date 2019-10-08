@@ -15,6 +15,11 @@ typedef struct {
 // post-condition: assigns all attributes to have value 0.
 void initProcess(PCB* process);
 
+
+//post-con: assigned PCB totalTime to given totalRunTime and
+//remainingTime to same value, assigns pid value
+void initProcessValues(PCB* process, int pid, int totalRunTime);
+
 // process - Pointer to a PCB
 // runTime - Number of seconds to run this process on CPU
 // post-condition: Decrease process remainingTime by 
