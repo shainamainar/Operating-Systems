@@ -1,0 +1,78 @@
+Complete the .c files to implement each of the below .h files.
+
+---------- PCB.h ----------
+
+#if !defined(PCB_HDR)
+#define PCB_HDR
+
+typedef struct {
+  int pid;
+  int totalTime;
+  int remainingTime;
+} PCB;
+
+// process - Pointer to a PCB
+// post-condition: assigns all attributes to have value 0.
+void initProcess(PCB* process);
+
+// process - Pointer to a PCB
+// runTime - Number of seconds to run this process on CPU
+// post-condition: Decrease process remainingTime by 
+// runTime only if runTime is >= remainingTime; else,
+// decrease process remainingTime by remainingTime (zero it out),
+// if remainingTime < runTime
+void runProcess(PCB* process, int runTime);
+
+#endif
+
+---------- ReadyQueue.h --------------
+
+#if !defined(READY_Q_HDR)
+#define READY_Q_HDR
+
+#include "PCB.h"
+#define MAX_Q_LEN 100
+
+typedef struct {
+  PCB processList[MAX_Q_LEN];
+  int numProcesses;
+} ReadyQueue;
+
+// Q - pointer to a ReadyQueue
+// post-conditon: sets numProcesses = 0
+void empty(ReadyQueue* Q);
+
+// Q - pointer to a ReadyQueue
+// returns true if queue is empty - contains no processes; else, false.
+bool isEmpty(ReadyQueue* Q);
+
+// Q - pointer to a ReadyQueue
+// returns true if queue is full - contains MAX_Q_LEN processes; else, false.
+bool isFull(ReadyQueue* Q);
+
+// Q - pointer to a ReadyQueue
+// returns number of processes stored in the queue.
+int size(ReadyQueue* Q);
+
+// Q - pointer to a ReadyQueue
+// returns number of processes stored in the queue.
+int size(ReadyQueue* Q);
+
+// Q - pointer to a ReadyQueue
+// process - pointer to a PCB
+// post-condition: if Q is not full, then insert process
+// into next open processList array slot, increment
+// numProcesses, and return true; else, return false.
+bool insert(ReadyQueue* Q, PCB* process);
+
+// Q - pointer to a ReadyQueue
+// post-condition: Sorts contents of queue into
+// increasing order of remainingTime.  PCB with lowest
+// remainingTime will occupy list slot index 0.
+void sort(ReadyQueue* Q);
+
+// Q - pointer to a ReadyQueue
+// post-condition: prints out information for each PCB in the queue.
+void print(ReadyQueue* Q);
+
+#endif
