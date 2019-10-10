@@ -1,0 +1,22 @@
+#include "PCB.h"
+#include "ReadyQueue.h"
+#include <stdio.h>
+
+int globalTime = 0;
+
+void main()
+{
+  // Initialize one or more PCBs.
+
+  // Insert them into ReadyQueue in arrival order.
+
+  // Loop to repeat simulation as long as ready queue contains at least one process
+
+       // Call one of the readyQueue run functions for whichever CPU scheduler you are simulating
+
+
+
+
+
+
+}
