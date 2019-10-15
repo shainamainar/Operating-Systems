@@ -2,6 +2,9 @@
 //implementation of readyq functions
 
 #include "ReadyQueue.h"
+#include<stdio.h>
+#include"stdbool.h"
+int numProcesses;
 
 // Q - pointer to a ReadyQueue
 // post-conditon: sets numProcesses = 0
@@ -43,10 +46,10 @@ bool insert(ReadyQueue* Q, PCB* process){
     Q->processList[Q->numProcesses] = *process;
     Q->numProcesses++;
     // Assume #define TRUE  1 has been done somewhere
-    return TRUE;
+    return true;
   }
   else
-    return FALSE;
+    return false;
 }
 
 // Q - pointer to a ReadyQueue
@@ -62,7 +65,7 @@ void sort(ReadyQueue* Q){
     // Loop to copy shift second element into first slot,
     // third element into second slot, ...
     for(int i = 0; i < (Q->numProcesses-1); i++)
-       Q->processList[i] = Q->processList[i+1]
+       Q->processList[i] = Q->processList[i+1];
   }
 
   if(!isEmpty(Q))
@@ -75,8 +78,8 @@ void sort(ReadyQueue* Q){
 // post-condition: prints out information for each PCB in the queue.
 void print(ReadyQueue* Q){
 	for(int i = 0; i < Q->numProcesses; i++){
-	
-		printf("PID: %d, Total time: %d, Remaining Time: %d", Q->processList[i]->pid, Q->processList[i]->totalTime, Q->processList[i]->remainingTime);
+		
+		printf("PID: %d, Total time: %d, Remaining Time: %d", Q->processList[i].pid, Q->processList[i].totalTime, Q->processList[i].remainingTime);
 	}
 }
 
@@ -101,7 +104,8 @@ void removeFrontPCB(ReadyQueue* Q){
 //post -con: if Q is not empty, then call runProcess fucntion on first PCB in the queue
 //Run first process in Q to completion. Shift all remaining PCBs one array slot forward
 //so second is now first
-void runFCFS(ReadyQueue* Q){
+int runFCFS(ReadyQueue* Q){
+	int timeRun;
    if(!isEmpty(Q))
    {
       // Get pointer to first process in Q
@@ -119,9 +123,11 @@ void runFCFS(ReadyQueue* Q){
       // If process has <= 0 remainingTime ten remove completed front of Q process and
 		   // Print message if process completes
        // TIME 2   PID 1    COMPLETE
-       printf("Time %d Completed PID %d\n", Q->time, process->pid);
+      // printf("Time %d Completed PID %d\n", Q->time, process->pid);
 			
    }
+   return Q->time;
+}
 
 // Q - pointer to a ReadyQueue
 // post-condition: if Q is not empty, then call sort to arrange the
@@ -129,14 +135,32 @@ void runFCFS(ReadyQueue* Q){
 // Run first process in Q to completion.  Shift all remaining
 // PCBs one array slot forward so second is now first.
 // Return number of units of time that first process ran
-//TODO
-int runSRTF(ReadyQueue* Q);
+int runSRTF(ReadyQueue* Q){
+	int timeRun;
+	if(!isEmpty(Q)){
+		sort(Q);
+		PCB* process = &(Q->processList[0]);
+		timeRun = runProcess(process, process->remainingTime);
+		Q->time += timeRun;
+		removeFrontPCB(Q);
+	}
+	return Q->time;
+}
 
 // Q - pointer to a ReadyQueue
 // post-condition: if Q is not empty, then call runProcess function
 // on first PCB in the queue.  After running the process, move it
 // to the rear of the Q
 // Return number of units of time that first process ran
-//TODO
-int runRoundRobin(ReadyQueue* Q, int timeSlice);
+int runRoundRobin(ReadyQueue* Q, int timeSlice){
+	int timeRun;
+	if(!isEmpty(Q)){
+		PCB* process = &(Q->processList[0]);
+		timeRun = runProcess(process, timeSlice);
+		removeFrontPCB(Q);
+		insert(Q, process);
+		Q->time += timeRun;
+	}
+	return Q->time;
+
 }
