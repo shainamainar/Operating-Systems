@@ -58,9 +58,10 @@ int main(int argc, char *argv[]){
 	sem_init(&mutex, 0, 1); // mutex = 1 because only one at a time can hold the lock
 	
 	pthread_t p1, p2;
-	printf("Creating thread...");
+	printf("Creating thread...\n");
 	pthread_create(&p1, NULL, producer, "Producer");
 	pthread_create(&p2, NULL, consumer, "Consumer");
+	printf("Threads running...\n")
 	pthread_join(p1, NULL);
 	pthread_join(p2, NULL);
 	printf("Both threads finished.\n");
