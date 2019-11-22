@@ -28,7 +28,7 @@ int get(){
 //adds to the buffer using semaphores
 void *producer(void *arg){
 	int i;
-	for (i = 0; i < useIndex; i++){
+	for (i = 0; i < MAX_BUFFER_SIZE; i++){
 		sem_wait(&empty);
 		sem_wait(&mutex);
 		put(i);
@@ -41,7 +41,7 @@ void *producer(void *arg){
 //takes from the buffer using semaphores
 void *consumer(void *args){
 	int i;
-	for(i = 0; i < fillIndex; i++){
+	for(i = 0; i < MAX_BUFFER_SIZE; i++){
 		sem_wait(&full);
 		sem_wait(&mutex);
 		int tmp = get();
