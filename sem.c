@@ -29,11 +29,11 @@ int get(){
 void *producer(void *arg){
 	int i;
 	for (i = 0; i < 5; i++){
-		Sem_wait(&empty);
-		Sem_wait(&wait);
+		sem_wait(&empty);
+		sem_wait(&mutex);
 		put(i);
-		Sem_post(&mutex);
-		Sem_post(&full);
+		sem_post(&mutex);
+		sem_post(&full);
 	}
 	
 }
@@ -41,27 +41,27 @@ void *producer(void *arg){
 void *consumer(void *args){
 	int i;
 	for(i = 0; i < 5; i++){
-		Sem_wait(&full);
-		Sem_wait(&mutex);
+		sem_wait(&full);
+		sem_wait(&mutex);
 		int tmp = get();
-		Sem_post(&mutex);
-		Sem_post(&empty);
+		sem_post(&mutex);
+		sem_post(&empty);
 		printf("%d\n", tmp);
 	}
 }
 
 //driver method
 int main(int argc, char *argv[]){
-	Sem_init(&empty, 0, MAX_BUFFER_SIZE); //buffer is empty and holds MAX_BUFFER_SIZE
-	Sem_init(&full, 0, 0); //there is nothing in the buffer initially
-	Sem_init(&mutex, 0, 1); // mutex = 1 because only one at a time can hold the lock
+	sem_init(&empty, 0, MAX_BUFFER_SIZE); //buffer is empty and holds MAX_BUFFER_SIZE
+	sem_init(&full, 0, 0); //there is nothing in the buffer initially
+	sem_init(&mutex, 0, 1); // mutex = 1 because only one at a time can hold the lock
 	
 	pthread_t p1, p2;
 	printf("Creating thread...");
-	Pthread_create(&p1, NULL, producer, "Producer");
-	Pthread_create(&p2, NULL, consumer, "Consumer");
-	Pthread_join(p1, NULL);
-	Pthread_join(p2, NULL);
+	pthread_create(&p1, NULL, producer, "Producer");
+	pthread_create(&p2, NULL, consumer, "Consumer");
+	pthread_join(p1, NULL);
+	pthread_join(p2, NULL);
 	printf("Both threads finished.");
 	return 0;
 	
