@@ -4,7 +4,7 @@
 #include<semaphore.h>
 
 // Declaring global variables
-#define MAX_BUFFER_SIZE 10;
+#define MAX_BUFFER_SIZE 10
 int buffer[MAX_BUFFER_SIZE];
 int fillIndex = 0;
 int useIndex = 0;
