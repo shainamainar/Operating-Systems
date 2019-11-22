@@ -61,10 +61,13 @@ int main(int argc, char *argv[]){
 	printf("Creating thread...\n");
 	pthread_create(&p1, NULL, producer, "Producer");
 	pthread_create(&p2, NULL, consumer, "Consumer");
-	printf("Threads running...\n")
+	printf("Threads running...\n");
 	pthread_join(p1, NULL);
 	pthread_join(p2, NULL);
 	printf("Both threads finished.\n");
+	for (int i = 0; i < MAX_BUFFER_SIZE; i++){
+		printf("Value at index %d: %d\n", i, buffer[i]);
+	}
 	return 0;
 	
 }
