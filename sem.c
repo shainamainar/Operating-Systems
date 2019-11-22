@@ -2,6 +2,7 @@
 #include<assert.h>
 #include<pthread.h>
 #include<semaphore.h>
+#include<unistd.h>
 
 // Declaring global variables
 #define MAX_BUFFER_SIZE 10
@@ -17,12 +18,12 @@ sem_t mutex; //controls access to the buffer
 //helper method: adds to the buffer
 void put(int value){
 	buffer[fillIndex] = value;
-	fillIndex = (fillIndex + 1) % MAX_BUFFER_SIZE;
+	fillIndex = (fillIndex + 1);
 }
 //helper method: gets value from the buffer
 int get(){
 	int tmp = buffer[useIndex];
-	useIndex = (useIndex + 1) % MAX_BUFFER_SIZE;
+	useIndex = (useIndex + 1);
 	return tmp;
 }
 //adds to the buffer using semaphores
@@ -47,7 +48,7 @@ void *consumer(void *args){
 		int tmp = get();
 		sem_post(&mutex);
 		sem_post(&empty);
-		printf("Taking %d from buffer\n", tmp);
+		printf("Taking %d from buffer.\n", tmp);
 	}
 }
 
@@ -58,16 +59,21 @@ int main(int argc, char *argv[]){
 	sem_init(&mutex, 0, 1); // mutex = 1 because only one at a time can hold the lock
 	
 	pthread_t p1, p2;
-	printf("Creating thread...\n");
+	printf("-----Creating threads-----\n");
 	pthread_create(&p1, NULL, producer, "Producer");
+	sleep(2);
 	pthread_create(&p2, NULL, consumer, "Consumer");
-	printf("Threads running...\n");
 	pthread_join(p1, NULL);
 	pthread_join(p2, NULL);
-	printf("Both threads finished.\n");
-	for (int i = 0; i < MAX_BUFFER_SIZE; i++){
+	sem_destroy(&empty);
+	sem_destroy(&full);
+	sem_destroy(&mutex);
+	printf("-----Both threads finished.-----\n");
+	printf("Producer total: %d\n", fillIndex);
+	printf("Consumer total: %d\n", useIndex);
+	/*for (int i = 0; i < MAX_BUFFER_SIZE; i++){
 		printf("Value at index %d: %d\n", i, buffer[i]);
-	}
+	}*/
 	return 0;
 	
 }
