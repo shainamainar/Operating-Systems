@@ -34,6 +34,7 @@ void *producer(void *arg){
 		put(i);
 		sem_post(&mutex);
 		sem_post(&full);
+		printf("Adding %d to buffer.\n", i);
 	}
 	
 }
@@ -46,7 +47,7 @@ void *consumer(void *args){
 		int tmp = get();
 		sem_post(&mutex);
 		sem_post(&empty);
-		printf("%d\n", tmp);
+		printf("Taking %d from buffer\n", tmp);
 	}
 }
 
@@ -62,7 +63,7 @@ int main(int argc, char *argv[]){
 	pthread_create(&p2, NULL, consumer, "Consumer");
 	pthread_join(p1, NULL);
 	pthread_join(p2, NULL);
-	printf("Both threads finished.");
+	printf("Both threads finished.\n");
 	return 0;
 	
 }
