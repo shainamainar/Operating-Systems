@@ -34,9 +34,9 @@ int get(){
 //adds to the buffer using semaphores
 void *producer(void *arg){
 	sem_wait(&empty);
-	sem_wait(&mutex);
+	//sem_wait(&mutex);
 	put(i);
-	sem_post(&mutex);
+	//sem_post(&mutex);
 	sem_post(&full);
 	printf("Adding %d to buffer.\n", i);
 	i++;
@@ -44,33 +44,36 @@ void *producer(void *arg){
 	
 }
 //takes from the buffer using semaphores
-void *consumer(void *args){
+void *consumer(void *arg){
 
 	sem_wait(&full);
-	sem_wait(&mutex);
+	//sem_wait(&mutex);
 	int tmp = get();
-	sem_post(&mutex);
+	//sem_post(&mutex);
 	sem_post(&empty);
 	printf("Taking %d from buffer.\n", tmp);
 }
 
 //driver method
 int main(int argc, char *argv[]){
+	pthread_t p1, p2, p3; //declare threads
 	sem_init(&empty, 0, MAX_BUFFER_SIZE); //buffer is empty and holds MAX_BUFFER_SIZE
 	sem_init(&full, 0, 0); //there is nothing in the buffer initially
 	sem_init(&mutex, 0, 1); // mutex = 1 because only one at a time can hold the lock
 	
 	//create multiple threads
-	for(int i = 0; i < MAX_BUFFER_SIZE; i++){
-		pthread_t p1, p2; //declare threads
-		printf("-----Creating threads %d-----\n", i);
-		pthread_create(&p1, NULL, producer, "Producer"); //create producer thread
-		sleep(1);
-		pthread_create(&p2, NULL, consumer, "Consumer"); //create consumer thread
-		pthread_join(p1, NULL); 
-		pthread_join(p2, NULL);
-		printf("\n");
-	}
+
+
+	printf("-----Creating threads %d-----\n", i);
+	pthread_create(&p1, NULL, producer, "Producer"); //create producer thread
+	sleep(1);
+	pthread_create(&p2, NULL, producer, "Producer 2"); //create consumer thread
+	pthread_create(&p3, NULL, consumer, "consumer");
+	pthread_join(p1, NULL); 
+	pthread_join(p2, NULL);
+	pthread_join(p3, NULL);
+	printf("\n");
+
 	printf("\n");
 	printf("-----Results-----\n");
 	printf("Producer total: %d\n", fillIndex);
